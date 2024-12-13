@@ -37,7 +37,7 @@ import qgis, platform
 from qgis.core import *
 from qgis.gui import *
 from qgis.PyQt.QtWidgets import *
-
+from qgis.PyQt import QtXml
 import os
 import math
 import uuid
@@ -104,6 +104,9 @@ class InstantPrintTool(QgsMapTool):
         self.exportButton.setDefault(True)
         self.helpButton = self.dialogui.buttonBox.addButton(self.tr("Help"), QDialogButtonBox.HelpRole)
         self.helpButton.setEnabled(True)
+        self.ComposerButton = self.dialogui.buttonBox.addButton(self.tr("Composer"), QDialogButtonBox.ActionRole)
+        self.ComposerButton.setEnabled(True)
+
         self.dialogui.comboBox_fileformat.addItem("PDF", self.tr("PDF Document (*.pdf);;"))
         self.dialogui.comboBox_fileformat.addItem("JPG", self.tr("JPG Image (*.jpg);;"))
         self.dialogui.comboBox_fileformat.addItem("BMP", self.tr("BMP Image (*.bmp);;"))
@@ -111,14 +114,22 @@ class InstantPrintTool(QgsMapTool):
         
         self.iface.layoutDesignerOpened.connect(lambda view: self.__reloadLayouts())
         self.iface.layoutDesignerWillBeClosed.connect(self.__reloadLayouts)
-        self.dialogui.spinBoxScale.valueChanged.connect(self.__changeScale)
+        self.dialogui.comboBox_scale.currentTextChanged.connect(self.__changeScale)
+        
         self.dialogui.spinBoxRotation.valueChanged.connect(self.__changeRotation)
         self.dialogui.comboBox_composers.currentIndexChanged.connect(self.__selectComposer)  
+
+        self.dialogui.comboBox_printFormat.currentIndexChanged.connect(self.__selectcomboBox_printFormat)  
+        self.dialogui.checkBoxOrientation.stateChanged.connect(self.__selectcomboBox_printFormat)  
+
+
         self.dialogui.pushButtonMapcanvasScale.clicked.connect(self.__useCanvasScale)
         self.dialogui.pushButtonPrintAlongLine.clicked.connect(self.__printAlongLine)
         self.dialogui.checkBoxPrintAlongLine.stateChanged.connect(self.__usePrintAlong)
+
         self.exportButton.clicked.connect(self.__export)
         self.helpButton.clicked.connect(self.__help)
+        self.ComposerButton.clicked.connect(self.__show_composer)
         self.dialogui.buttonBox.button(QDialogButtonBox.Close).clicked.connect(lambda: self.setEnabled(False))
         self.deactivated.connect(self.__cleanup)
         self.setCursor(Qt.OpenHandCursor)
@@ -126,10 +137,27 @@ class InstantPrintTool(QgsMapTool):
 
         
         # Fill the combobox with available paperformats
-        self.paperformats = []
-        self.dialogui.printFormat.addItems(self.paperformats)
 
+
+        self.scales = []        
+        self.scales = self.__preferences("scale", False)
+        self.dialogui.comboBox_scale.addItems(self.scales)
+
+        self.paperformats = []
+        self.paperformats = self.__preferences("format", True)        
+        self.dialogui.comboBox_printFormat.addItems(self.paperformats)
+
+        #self.paperformats = ['A0','A0','A1','A1','A2','A2','A3','A3','A4','A4']
+        #self.dialogui.comboBox_printFormat.addItems(self.paperformats)
         
+        #self.dialogui.comboBox_printFormat.addItem("DIN A0", "A0")
+        #self.dialogui.comboBox_printFormat.addItem("DIN A1", "A1")
+        #self.dialogui.comboBox_printFormat.addItem("DIN A2", "A2")
+        #self.dialogui.comboBox_printFormat.addItem("DIN A3", "A3")
+        #self.dialogui.comboBox_printFormat.addItem("DIN A4", "A4")
+
+
+
     def setEnabled(self, enabled):
         if enabled:
             self.dialog.setVisible(True)
@@ -141,6 +169,37 @@ class InstantPrintTool(QgsMapTool):
             self.__cleanup()
             self.iface.mapCanvas().unsetMapTool(self)
 
+    def __show_composer(self):
+        
+        activeIndex = self.dialogui.comboBox_composers.currentIndex()
+        if activeIndex < 0:
+            return
+        
+        #self.close()
+        self.iface.openLayoutDesigner(self.dialogui.comboBox_composers.itemData(activeIndex))
+
+
+
+
+    def __selectcomboBox_printFormat(self):
+        if not self.mapitem:
+            return
+        ### Set Format and Orientaion
+        currentLayout = self.projectLayoutManager.layoutByName(self.layout_name)
+        currentPageCollection =currentLayout.pageCollection()
+
+        format = self.dialogui.comboBox_printFormat.currentText()
+
+        if self.dialogui.checkBoxOrientation.isChecked() :
+            currentPageCollection.page(0).setPageSize(format,QgsLayoutItemPage.Landscape)
+        else:
+            currentPageCollection.page(0).setPageSize(format,QgsLayoutItemPage.Portrait)
+
+        currentLayout.refresh()
+        self.__changeScale()
+        self.__createRubberBand()
+
+
     def __changeRotation(self):
         if not self.mapitem:
             return
@@ -148,7 +207,7 @@ class InstantPrintTool(QgsMapTool):
         self.__createRubberBand()
         
     def __useCanvasScale(self):
-        self.dialogui.spinBoxScale.setValue(int(round(self.iface.mapCanvas().scale()/10,1)*10))
+        self.dialogui.comboBox_scale.setValue(int(round(self.iface.mapCanvas().scale()/10,1)*10))
         
     def __usePrintAlong(self):
         self.__cleanup()
@@ -158,7 +217,7 @@ class InstantPrintTool(QgsMapTool):
             self.dialogui.pushButtonPrintAlongLine.setEnabled(True)
             self.dialogui.comboBox_composers.setEnabled(False)
             self.dialogui.comboBox_fileformat.setEnabled(False)
-            self.dialogui.spinBoxScale.setEnabled(False)
+            self.dialogui.comboBox_scale.setEnabled(False)
             self.dialogui.spinBoxRotation.setEnabled(False)
             self.dialogui.pushButtonMapcanvasScale.setEnabled(False)
             self.dialogui.overlapLabel.setEnabled(True)
@@ -170,7 +229,7 @@ class InstantPrintTool(QgsMapTool):
             self.dialogui.pushButtonPrintAlongLine.setEnabled(False)
             self.dialogui.comboBox_composers.setEnabled(True)
             self.dialogui.comboBox_fileformat.setEnabled(True)
-            self.dialogui.spinBoxScale.setEnabled(True)
+            self.dialogui.comboBox_scale.setEnabled(True)
             self.dialogui.spinBoxRotation.setEnabled(True)
             self.dialogui.pushButtonMapcanvasScale.setEnabled(True)
             self.dialogui.overlapLabel.setEnabled(False)
@@ -189,7 +248,7 @@ class InstantPrintTool(QgsMapTool):
     def __changeScale(self):
         if not self.mapitem:
             return
-        newscale = self.dialogui.spinBoxScale.value()
+        newscale = int(self.dialogui.comboBox_scale.currentText())
         if abs(newscale) < 1E-6:
             return
         extent = self.mapitem.extent()
@@ -360,12 +419,12 @@ class InstantPrintTool(QgsMapTool):
         if len(maps) != 1:
             QMessageBox.information(self.iface.mainWindow(), self.tr("Invalid composer"), self.tr("The composer must have exactly one map item."))
             self.exportButton.setEnabled(False)
-            self.dialogui.spinBoxScale.setEnabled(False)
+            self.dialogui.comboBox_scale.setEnabled(False)
             self.dialogui.spinBoxRotation.setEnabled(False)
             self.dialogui.LegendCheckbox.setEnabled(False)
             return
         
-        self.dialogui.spinBoxScale.setEnabled(True)
+        self.dialogui.comboBox_scale.setEnabled(True)
         self.dialogui.spinBoxRotation.setEnabled(True)        
         self.exportButton.setEnabled(True)
         self.dialogui.LegendCheckbox.setEnabled(False)
@@ -375,12 +434,16 @@ class InstantPrintTool(QgsMapTool):
         
         self.composerView = composerView
         self.mapitem = maps[0]
-        self.dialogui.spinBoxScale.setValue(int(round(self.mapitem.scale()/10,1)*10))
+        
         self.mapitem.setMapRotation(0)
         
+
+
+
+            
         def containsAll(str,set):
             return 0 not in [c in str for c in set]
-            
+                
         stdVars = ['qgis_os_name','qgis_platform','qgis_release_name','qgis_version','qgis_version_no','user_account_name','user_full_name','project_filename','project_folder','project_title']
         for item in composerView.items():
             if isinstance(item,QgsLayoutItemLabel):
@@ -391,7 +454,7 @@ class InstantPrintTool(QgsMapTool):
         lineEditsList = [self.dialogui.lineEdit1,self.dialogui.lineEdit2,self.dialogui.lineEdit3,self.dialogui.lineEdit4,self.dialogui.lineEdit5]
         labelList =[self.dialogui.label_1,self.dialogui.label_2,self.dialogui.label_3,self.dialogui.label_4,self.dialogui.label_5]
 
-   
+
 
         for l in lineEditsList:
             l.clear()
@@ -493,7 +556,23 @@ class InstantPrintTool(QgsMapTool):
             self.dialogui.label_3.setVisible(True)
             self.dialogui.label_4.setVisible(True)
             self.dialogui.label_5.setVisible(True)
-        
+
+
+        # self.dialogui.comboBox_scale.setValue(int(round(self.mapitem.scale()/10,1)*10))
+        self.dialogui.comboBox_scale.setEditText(str(int(self.mapitem.scale())))
+
+        layout_pages = self.layout.pageCollection()
+        first_layout_page = layout_pages.page(0)
+
+        page_size_registry = QgsApplication.pageSizeRegistry()
+        page_size = page_size_registry.find(first_layout_page.pageSize())
+
+        self.dialogui.comboBox_printFormat.setEditText(str(self.paperformats))
+
+        if first_layout_page.orientation() == QgsLayoutItemPage.Portrait:
+            self.dialogui.checkBoxOrientation.setCheckState = False
+        else :
+           self.dialogui.checkBoxOrientation.setCheckState = True             
         self.__createRubberBand()
     
     def __selectLayout(self):
@@ -524,7 +603,7 @@ class InstantPrintTool(QgsMapTool):
             self.dialogui.comboBox_scale.setEnabled(False)
             return
 
-        self.dialogui.spinBoxScale.setEnabled(True)
+        self.dialogui.comboBox_scale.setEnabled(True)
         self.exportButton.setEnabled(True)
         self.layoutView = layoutView
         self.mapitem = self.layout.referenceMap()
@@ -544,7 +623,7 @@ class InstantPrintTool(QgsMapTool):
         vertexCount = self.rubberBand.numberOfVertices()
         segmentCount = vertexCount - 1 
         
-        overlapInMeters =  (self.dialogui.spinBoxOverlap.value()/100 * self.dialogui.spinBoxScale.value() )/ 2    #(self.dialogui.spinBoxOverlap.value()/100)/(1/self.dialogui.spinBoxScale.value())/2
+        overlapInMeters =  (self.dialogui.spinBoxOverlap.value()/100 * int(self.dialogui.comboBox_scale.currentText()) )/ 2    
         
         TestwidthOfMap = self.mapitem.extent().width() - (2*overlapInMeters)
         widthOfMap = self.mapitem.extent().width()
@@ -764,14 +843,53 @@ class InstantPrintTool(QgsMapTool):
 
         if self.dialogui.comboBox_composers.count() > 0:
             self.dialogui.comboBox_composers.setCurrentIndex(active)
-            self.dialogui.spinBoxScale.setEnabled(True)
+            self.dialogui.comboBox_scale.setEnabled(True)
             self.exportButton.setEnabled(True)
         else:
             self.exportButton.setEnabled(False)
-            self.dialogui.spinBoxScale.setEnabled(False)
+            self.dialogui.comboBox_scale.setEnabled(False)
 
 
 
     def __help(self):
         manualPath = os.path.join(os.path.dirname(__file__), self.tr("help"), "documentation.pdf")
         QDesktopServices.openUrl(QUrl.fromLocalFile(manualPath))
+
+
+    def __preferences(self, pref, text):
+        prefs = []
+        preffilename = ":/plugins/NextPrint/preferences/preferences.xml"
+        preffilename = os.path.join(self.pluginDir, 'preferences', 'preferences.xml')
+
+        try:
+            preffile = open(preffilename, "r")
+            prefxml = preffile.read()
+
+            doc = QtXml.QDomDocument()
+            doc.setContent(prefxml, True)
+
+            root = doc.documentElement()
+            if root.tagName() != "preferences":
+                return
+
+            n = root.firstChild()
+            while not n.isNull():
+                e = n.toElement()
+                sube = e.firstChild()
+                while not sube.isNull():
+                    if sube.toElement().tagName() == pref:
+                        try:
+                            if not text:
+                                float(sube.toElement().text())
+                            prefs.append(sube.toElement().text())
+                        except ValueError:
+                            print("float error: reading scales")
+                    sube = sube.nextSibling()
+                n = n.nextSibling()
+        except IOError:
+
+
+            print("error opening preferences.xml")
+
+        return prefs
+    

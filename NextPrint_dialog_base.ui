@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>372</width>
-    <height>527</height>
+    <height>501</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,6 +18,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>372</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="sizeIncrement">
    <size>
@@ -53,6 +59,13 @@
      </property>
     </widget>
    </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
    <item row="2" column="1">
     <widget class="QPushButton" name="pushButtonMapcanvasScale">
      <property name="text">
@@ -67,39 +80,14 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QSpinBox" name="spinBoxScale">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="prefix">
-      <string notr="true">1:</string>
-     </property>
-     <property name="minimum">
-      <number>10</number>
-     </property>
-     <property name="maximum">
-      <number>1000000000</number>
-     </property>
-     <property name="singleStep">
-      <number>50</number>
-     </property>
-     <property name="value">
-      <number>1000</number>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="label_fileformat">
      <property name="text">
       <string>File format:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="5" column="1">
     <widget class="QComboBox" name="comboBox_fileformat">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -107,16 +95,53 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="currentText">
+      <string/>
+     </property>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Pagesize:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QComboBox" name="comboBox_printFormat">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>Orientation:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QCheckBox" name="checkBoxOrientation">
+     <property name="text">
+      <string>landscape format</string>
+     </property>
+     <property name="tristate">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
     <widget class="QLabel" name="label_rotation">
      <property name="text">
       <string>Rotation:</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="10" column="1">
     <widget class="QSpinBox" name="spinBoxRotation">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -135,7 +160,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
+   <item row="11" column="1">
     <widget class="QCheckBox" name="checkBoxPrintAlongLine">
      <property name="enabled">
       <bool>true</bool>
@@ -151,7 +176,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="12" column="0">
     <widget class="QLabel" name="overlapLabel">
      <property name="enabled">
       <bool>false</bool>
@@ -161,7 +186,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
+   <item row="12" column="1">
     <widget class="QSpinBox" name="spinBoxOverlap">
      <property name="enabled">
       <bool>false</bool>
@@ -183,7 +208,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
+   <item row="13" column="1">
     <widget class="QPushButton" name="pushButtonPrintAlongLine">
      <property name="enabled">
       <bool>false</bool>
@@ -205,7 +230,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="1">
+   <item row="14" column="1">
     <widget class="QCheckBox" name="LegendCheckbox">
      <property name="enabled">
       <bool>false</bool>
@@ -218,7 +243,7 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="0">
+   <item row="15" column="0">
     <widget class="QLabel" name="label_1">
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -231,7 +256,7 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="1">
+   <item row="15" column="1">
     <widget class="QLineEdit" name="lineEdit1">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -241,7 +266,7 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="0">
+   <item row="16" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>Label2:</string>
@@ -251,10 +276,10 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
+   <item row="16" column="1">
     <widget class="QLineEdit" name="lineEdit2"/>
    </item>
-   <item row="12" column="0">
+   <item row="17" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Label3:</string>
@@ -264,10 +289,10 @@
      </property>
     </widget>
    </item>
-   <item row="12" column="1">
+   <item row="17" column="1">
     <widget class="QLineEdit" name="lineEdit3"/>
    </item>
-   <item row="13" column="0">
+   <item row="18" column="0">
     <widget class="QLabel" name="label_4">
      <property name="text">
       <string>Label4:</string>
@@ -277,10 +302,10 @@
      </property>
     </widget>
    </item>
-   <item row="13" column="1">
+   <item row="18" column="1">
     <widget class="QLineEdit" name="lineEdit4"/>
    </item>
-   <item row="14" column="0">
+   <item row="19" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>Label5:</string>
@@ -290,10 +315,10 @@
      </property>
     </widget>
    </item>
-   <item row="14" column="1">
+   <item row="19" column="1">
     <widget class="QLineEdit" name="lineEdit5"/>
    </item>
-   <item row="15" column="1">
+   <item row="20" column="1">
     <widget class="QCheckBox" name="checkBoxOpenFile">
      <property name="text">
       <string>Open generated File</string>
@@ -303,7 +328,7 @@
      </property>
     </widget>
    </item>
-   <item row="16" column="1">
+   <item row="21" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -316,20 +341,16 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QComboBox" name="printFormat"/>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Format</string>
+   <item row="3" column="1">
+    <widget class="QComboBox" name="comboBox_scale">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_7">
-     <property name="text">
-      <string/>
+     <property name="editable">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -337,9 +358,12 @@
  </widget>
  <tabstops>
   <tabstop>comboBox_composers</tabstop>
-  <tabstop>spinBoxScale</tabstop>
+  <tabstop>pushButtonMapcanvasScale</tabstop>
   <tabstop>comboBox_fileformat</tabstop>
+  <tabstop>comboBox_printFormat</tabstop>
+  <tabstop>checkBoxOrientation</tabstop>
   <tabstop>spinBoxRotation</tabstop>
+  <tabstop>checkBoxPrintAlongLine</tabstop>
   <tabstop>spinBoxOverlap</tabstop>
   <tabstop>pushButtonPrintAlongLine</tabstop>
   <tabstop>LegendCheckbox</tabstop>
@@ -348,6 +372,7 @@
   <tabstop>lineEdit3</tabstop>
   <tabstop>lineEdit4</tabstop>
   <tabstop>lineEdit5</tabstop>
+  <tabstop>checkBoxOpenFile</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -358,8 +383,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>365</x>
-     <y>442</y>
+     <x>362</x>
+     <y>485</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -374,8 +399,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>365</x>
-     <y>442</y>
+     <x>362</x>
+     <y>485</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>

@@ -103,8 +103,7 @@ class NextPrint(QObject):
 
     def run(self):
         """Run method that performs all the real work"""
-        scales = self.preferences("scale", False)
-        paperformats = self.preferences("format", True)
+
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
@@ -116,37 +115,4 @@ class NextPrint(QObject):
             pass
 
 
-    def preferences(self, pref, text):
-        prefs = []
-        preffilename = ":/plugins/NextPrint/preferences/preferences.xml"
 
-        try:
-            preffile = open(preffilename, "r")
-            prefxml = preffile.read()
-
-            doc = QtXml.QDomDocument()
-            doc.setContent(prefxml, True)
-
-            root = doc.documentElement()
-            if root.tagName() != "preferences":
-                return
-
-            n = root.firstChild()
-            while not n.isNull():
-                e = n.toElement()
-                sube = e.firstChild()
-                while not sube.isNull():
-                    if sube.toElement().tagName() == pref:
-                        try:
-                            if not text:
-                                float(sube.toElement().text())
-                            prefs.append(sube.toElement().text())
-                        except ValueError:
-                            print("float error: reading scales")
-                    sube = sube.nextSibling()
-                n = n.nextSibling()
-        except IOError:
-
-            print("error opening preferences.xml")
-
-        return prefs

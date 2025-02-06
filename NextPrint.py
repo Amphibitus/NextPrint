@@ -89,7 +89,7 @@ class NextPrint(QObject):
             self.toolButton.setChecked(False)
 
     def exitAll(self):
-        self.dlg.spinBoxScale.setValue(1000)
+        self.dlg.comboBox_scale.setValue(1000)
         self.dlg.spinBoxRotation.setValue(0)
         self.dlg.LegendCheckbox.setChecked(False)
         self.dialogui.LegendCheckbox.setEnabled(True)

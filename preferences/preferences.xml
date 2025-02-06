@@ -20,11 +20,6 @@
         <format height="841" width="594">A1</format>
         <format height="1189" width="841">A0</format>
 
-        <format height="210" width="297">A4 quer</format>
-        <format height="297" width="420">A3 quer</format>
-        <format height="420" width="594">A2 quer</format>
-        <format height="594" width="841">A1 quer</format>
-        <format height="841" width="1189">A0 quer</format>
     </paperformats>
 </preferences>
 

@@ -1,16 +1,15 @@
 # This file contains metadata for your plugin.
-
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
 name=Next Print
 qgisMinimumVersion=3.0
 description=This plugin makes it easy to print using templates and text 
-version=2.7
+version=2.8
 author=g3er geoplaning GmbH
 email=kontakt@geoplaning.de
 
-about=This plugin makes it easy to fill text items in print templates and place/rotate plot.
+about=This plugin makes it easy to fill text items in print templates and place/rotate plot or Change the papersize.
 
 tracker=https://github.com/Amphibitus/NextPrint/issues
 repository=https://github.com/Amphibitus/NextPrint
@@ -20,16 +19,17 @@ repository=https://github.com/Amphibitus/NextPrint
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-changelog= 23-03-2020: Added feature to Change Papersize and Oriantation
-		   23-03-2020: Added feature to open export-file directly from plugin
+
+changelog= 23-03-2020: Added feature to open export-file directly from plugin
 		   27-05-2020: Added legend-handling 
 		   05-02-2021: Fixed rounding issue on scale and added possibylity to enter canvas scale 
 		   07-09-2021: Added feature to print along line
 		   12-01-2023: V2.5 by francois.thevand@gmail.com : Configuration of the complete automatic translation, by .ts file. Provision of French and Danish translation files.
 		   17-01-2023: V2.6 by francois.thevand@gmail.com : Fixed a bug in the export: the entry in the first title line was repeated on the others in the PDF document.
+		   12-12-2024: Added feature to Change Papersize and Oriantation 
 
 # Tags are comma separated with spaces allowed
-tags=python, qgis, print, templates
+tags=python, qgis, print, templates, papersize
 
 homepage=https://github.com/Amphibitus/NextPrint
 category=Plugins

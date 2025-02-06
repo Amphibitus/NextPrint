@@ -15,12 +15,12 @@
         <translation>Erzeuge eine Linie zum Drucken</translation>
     </message>
     <message>
-        <source>Composer:</source>
-        <translation>Layout :</translation>
+        <source>Composer</source>
+        <translation type="unfinished">Layout</translation>
     </message>
     <message>
         <source>Use current map canvas scale</source>
-        <translation>Noch keine Linie in die karte gezeichnet</translation>
+        <translation>Benutze den Masstab aus der aktuellen Darstellung</translation>
     </message>
     <message>
         <source>Scale:</source>
@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>Rotation:</source>
-        <translation>Drehung :</translation>
+        <translation>Drehung:</translation>
     </message>
     <message>
         <source>Use printing along line</source>
@@ -40,7 +40,7 @@
     </message>
     <message>
         <source>Print overlap:</source>
-        <translation>Überlappung;impression :</translation>
+        <translation>Überlappung :</translation>
     </message>
     <message>
         <source>Include legend</source>
@@ -48,7 +48,7 @@
     </message>
     <message>
         <source>Export</source>
-        <translation>Exporter</translation>
+        <translation>Ausgabe</translation>
     </message>
     <message>
         <source>Help</source>
@@ -125,6 +125,22 @@
     <message>
         <source>Export layout</source>
         <translation>Export Layout</translation>
+    </message>
+    <message>
+        <source>Open generated File</source>
+        <translation>Öffne die generierte Datei</translation>
+    </message>
+    <message>
+        <source>Orientation:</source>
+        <translation>Ausrichtung:</translation>
+    </message>
+    <message>
+        <source>landscape format</source>
+        <translation>Querfornmat</translation>
+    </message>
+    <message>
+        <source>Pagesize:</source>
+        <translation>Seitengröße:</translation>
     </message>
 </context>
 </TS>

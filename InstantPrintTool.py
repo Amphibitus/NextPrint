@@ -98,6 +98,15 @@ class InstantPrintTool(QgsMapTool):
         self.dialogui.checkBoxPrintAlongLine.setText(self.tr('Use printing along line'))
         self.dialogui.overlapLabel.setText(self.tr('Print overlap:'))
         self.dialogui.LegendCheckbox.setText(self.tr('Include legend'))
+        self.dialogui.checkBoxOrientation.setText(self.tr('landscape format'))
+        self.dialogui.label_rotation.setText(self.tr('Rotation'))
+        self.dialogui.label_orientation.setText(self.tr('Orientation:'))
+        self.dialogui.label_pagesize.setText(self.tr('Pagesize:'))
+        self.dialogui.checkBoxOpenFile.setText(self.tr('Open generated File'))
+
+
+        
+
         # Fin de la traduction de la boite de dialogue
 
         self.exportButton = self.dialogui.buttonBox.addButton(self.tr("Export"), QDialogButtonBox.ActionRole)
@@ -122,14 +131,15 @@ class InstantPrintTool(QgsMapTool):
         self.dialogui.comboBox_printFormat.currentIndexChanged.connect(self.__selectcomboBox_printFormat)  
         self.dialogui.checkBoxOrientation.stateChanged.connect(self.__selectcomboBox_printFormat)  
 
-
         self.dialogui.pushButtonMapcanvasScale.clicked.connect(self.__useCanvasScale)
+
         self.dialogui.pushButtonPrintAlongLine.clicked.connect(self.__printAlongLine)
         self.dialogui.checkBoxPrintAlongLine.stateChanged.connect(self.__usePrintAlong)
 
         self.exportButton.clicked.connect(self.__export)
         self.helpButton.clicked.connect(self.__help)
         self.ComposerButton.clicked.connect(self.__show_composer)
+
         self.dialogui.buttonBox.button(QDialogButtonBox.Close).clicked.connect(lambda: self.setEnabled(False))
         self.deactivated.connect(self.__cleanup)
         self.setCursor(Qt.OpenHandCursor)
@@ -138,23 +148,20 @@ class InstantPrintTool(QgsMapTool):
         
         # Fill the combobox with available paperformats
 
-
         self.scales = []        
-        self.scales = self.__preferences("scale", False)
+        
+        #self.scales = self.__preferences("scale", False)
+        # use scales out of the prject settings only integer!
+        
+        # self.scales = [str(int(x)) for x in reversed(QgsProjectViewSettings().mapScales())] 
+        self.scales = [str(int(x)) for x in reversed(self.projectInstance.mapScales())] 
         self.dialogui.comboBox_scale.addItems(self.scales)
 
         self.paperformats = []
         self.paperformats = self.__preferences("format", True)        
         self.dialogui.comboBox_printFormat.addItems(self.paperformats)
 
-        #self.paperformats = ['A0','A0','A1','A1','A2','A2','A3','A3','A4','A4']
-        #self.dialogui.comboBox_printFormat.addItems(self.paperformats)
-        
-        #self.dialogui.comboBox_printFormat.addItem("DIN A0", "A0")
-        #self.dialogui.comboBox_printFormat.addItem("DIN A1", "A1")
-        #self.dialogui.comboBox_printFormat.addItem("DIN A2", "A2")
-        #self.dialogui.comboBox_printFormat.addItem("DIN A3", "A3")
-        #self.dialogui.comboBox_printFormat.addItem("DIN A4", "A4")
+
 
 
 
@@ -188,6 +195,8 @@ class InstantPrintTool(QgsMapTool):
         currentLayout = self.projectLayoutManager.layoutByName(self.layout_name)
         currentPageCollection =currentLayout.pageCollection()
 
+
+
         format = self.dialogui.comboBox_printFormat.currentText()
 
         if self.dialogui.checkBoxOrientation.isChecked() :
@@ -196,7 +205,10 @@ class InstantPrintTool(QgsMapTool):
             currentPageCollection.page(0).setPageSize(format,QgsLayoutItemPage.Portrait)
 
         currentLayout.refresh()
+        
         self.__changeScale()
+
+
         self.__createRubberBand()
 
 
@@ -207,7 +219,8 @@ class InstantPrintTool(QgsMapTool):
         self.__createRubberBand()
         
     def __useCanvasScale(self):
-        self.dialogui.comboBox_scale.setValue(int(round(self.iface.mapCanvas().scale()/10,1)*10))
+        #self.dialogui.comboBox_scale.setValue(int(round(self.iface.mapCanvas().scale()/10,1)*10))
+        self.dialogui.comboBox_scale.setEditText(str(int(self.iface.mapCanvas().scale())))
         
     def __usePrintAlong(self):
         self.__cleanup()
@@ -223,7 +236,7 @@ class InstantPrintTool(QgsMapTool):
             self.dialogui.overlapLabel.setEnabled(True)
             self.dialogui.spinBoxOverlap.setEnabled(True)
             self.useLines = True
-            if self.dialogui.comboBox_fileformat.itemData(self.dialogui.comboBox_fileformat.currentIndex()).lower() != 'pdf document (*.pdf);;':
+            if self.dialogui.comboBox_fileformat.currentIndex()>0:
                 QMessageBox.information(None, self.tr("ERROR:"), self.tr("Only PDF is valid for multiple files output format."))
         if not self.dialogui.checkBoxPrintAlongLine.isChecked():
             self.dialogui.pushButtonPrintAlongLine.setEnabled(False)
@@ -467,8 +480,12 @@ class InstantPrintTool(QgsMapTool):
         idx=0
         for l in labels:
             ##QgsExpressionContextUtils.setProjectVariable(self.projectInstance,l,labelText[idx])
-            labelstxt.append ( QgsExpressionContextUtils.projectScope(self.projectInstance).variable(l))
-    
+            ltxt = QgsExpressionContextUtils.projectScope(self.projectInstance).variable(l)    
+            if ltxt == NULL or len(ltxt.strip())==0:
+                ltxt=''
+            labelstxt.append (ltxt)
+            
+
 
         if count==1:
             self.dialogui.lineEdit1.setText(labelstxt[0])
@@ -886,6 +903,7 @@ class InstantPrintTool(QgsMapTool):
                             print("float error: reading scales")
                     sube = sube.nextSibling()
                 n = n.nextSibling()
+            preffile.close()
         except IOError:
 
 

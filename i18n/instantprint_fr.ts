@@ -15,8 +15,8 @@
         <translation>Créer une ligne guide d&apos;impression</translation>
     </message>
     <message>
-        <source>Composer:</source>
-        <translation>Mise en page :</translation>
+        <source>Composer</source>
+        <translation>Mise en page </translation>
     </message>
     <message>
         <source>Use current map canvas scale</source>

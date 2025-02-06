@@ -15,8 +15,8 @@
         <translation>Opret en udskriftsguidelinje</translation>
     </message>
     <message>
-        <source>Composer:</source>
-        <translation>Layout:</translation>
+        <source>Composer</source>
+        <translation>Layout</translation>
     </message>
     <message>
         <source>Use current map canvas scale</source>

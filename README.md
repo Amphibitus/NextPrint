@@ -2,72 +2,63 @@
 
 ![QGIS Version](https://img.shields.io/badge/QGIS-3.x-green.svg)
 ![Plugin Version](https://img.shields.io/badge/Version-2.7-blue.svg)
+![Category](https://img.shields.io/badge/Category-Printing-orange.svg)
 
-**NextPrint** ist ein leistungsstarkes QGIS-Plugin, das den Workflow im Drucklayout (Print-Composer) radikal vereinfacht. Es ermöglicht die schnelle Eingabe von Textdaten, das Handling zahlreicher Layouts und die einfache Rotation von Karten.
+**NextPrint** optimiert den Workflow im QGIS-Drucklayout (Print-Composer). Es ermöglicht eine schnelle Texteingabe über Dialogfelder, unterstützt die Rotation von Karten und das Handling zahlreicher Layouts in einem Schritt.
 
 ---
 
-## 📖 Scope & Historie
+## 📖 Hintergrund & Historie
 
-Dieses Plugin basiert auf dem ursprünglichen "Instant Print" von SOURCEPOLE und wurde über "Easy Template Print" stetig weiterentwickelt.
+Das Plugin ist eine konsequente Weiterentwicklung bewährter Tools und vereint deren Stärken mit neuen Funktionen.
 
 ### Entwickler-Historie:
-* **Version 2.7+ (NextPrint):** Gerd Dreier (geoplaning GmbH)
+* **Seit Version 2.7 (NextPrint):** Gerd Dreier (geoplaning GmbH)
 * **Bis Version 2.6 (Easy Template Print):** Jesper Jøker Eg (GISkonsulenten)
 * **Ursprung (Instant Print):** SOURCEPOLE, Zürich
 
 ---
 
-## ✨ Hauptfunktionen
+## ✨ Features & Funktionen
 
-Das Plugin erweitert die Standard-Druckfunktionen von QGIS um folgende Features:
+### Automatisierung beim Start
+* **Intelligente Liste:** Erkennt alle Composer im Projekt und sortiert sie alphabetisch.
+* **Maßstabs-Sync:** Übernimmt automatisch den aktuellen Maßstab des Kartenfensters.
+* **Label-Erkennung:** Findet bis zu 5 Ausdrücke im Layout und generiert sofort passende Eingabefelder.
 
-### Automatisierung beim Start:
-* **Composer-Liste:** Lädt alle aktiven Layouts des Projekts alphabetisch sortiert.
-* **Skalierung:** Synchronisiert den Maßstab automatisch mit dem aktuellen Kartenfenster.
-* **Label-Erkennung:** Findet automatisch bis zu 5 Ausdrücke/Labels im Layout und erstellt dafür Eingabefelder im Dialog.
-* **Export-Formate:** Erstellt eine Liste aller verfügbaren Export-Optionen.
-
-### Benutzerfunktionen im Dialog:
-* **Layout-Wechsel:** Einfache Auswahl verschiedener Composer.
-* **Flexibler Maßstab:** Maßstab aus Liste wählen, manuell tippen oder vom Map-Canvas übernehmen.
-* **Format & Ausrichtung:** Dynamische Auswahl von Papiergröße sowie Hoch- oder Querformat.
-* **Rotation:** Anpassung der Rotation für alle an die Karte gekoppelten Elemente.
-* **Druck entlang einer Linie:** Spezialfunktion für lineare Projekte.
-* **Multi-Print:** Festlegung einer Überlappungsgröße für Seriendrucke.
-* **Sichtbarkeit:** Legende ein- oder ausblenden per Klick.
-* **Direkt-Export:** Export in Datei, Öffnen des Layouts im Composer oder automatisches Öffnen der generierten PDF.
+### Benutzerfunktionen im Dialog
+* **Flexibles Layout:** Wechsel von Papierformaten sowie Hoch- und Querformat direkt im Tool.
+* **Präzise Rotation:** Anpassung der Rotation für die Karte und alle damit verknüpften Layout-Elemente.
+* **Druck-Extras:** * Unterstützung für "Drucken entlang einer Linie".
+    * Definition von Überlappungen für den Multi-Print.
+    * Legende per Checkbox ein- oder ausblenden.
+* **Workflow-Boost:** Export-Vorschau, direktes Öffnen der PDF nach der Generierung oder Bearbeiten des Layouts im Composer.
 
 ---
 
-## 🛠 Technische Details & Bindings
+## 🛠 Konfiguration der Labels (Bindings)
 
-Damit das Plugin die Textfelder im Layout erkennt, müssen die Variablen korrekt formatiert sein.
+Damit NextPrint die Eingabefelder automatisch erkennt, müssen die Variablen im Drucklayout einem bestimmten Schema folgen:
 
 > [!IMPORTANT]
-> **Syntax für Label-Variablen:** > Die Variable muss exakt so geschrieben werden: `[% @Region %]` (bitte auf die Leerzeichen achten!).
+> **Syntax:** Die Variable muss exakt als `[% @Region %]` formatiert sein.
+> Das Plugin sucht gezielt nach dem Präfix `[% @]`.
 
-* Das Plugin durchsucht alle Label-Items im Composer nach dem String `[% @]`.
-* Gefundene Variablen werden als Eingabefeld im Dialog angezeigt.
-* Eingabedaten werden in den Projektvariablen gespeichert und stehen somit auch für andere Composer zur Verfügung.
-* **Hinweis:** Template-Variablen dürfen nicht denselben Namen wie Label-Variablen tragen.
-
----
-
-## 📐 Dynamische Layouts (Papierformat)
-
-Um die Funktion zur Änderung der Papiergröße optimal zu nutzen, müssen die Elemente (Karte, Legende, Texte) im QGIS-Composer **dynamisch definiert** sein, damit sie sich automatisch anpassen.
-
-* Beispiele finden sich im `Layout`-Ordner des Plugins.
-* Weitere Informationen findest du im [QGIS Training Manual: Dynamic Layout](https://docs.qgis.org/3.34/en/docs/training_manual/map_composer/dynamic_layout.html).
+* **Speicherung:** Eingegebene Daten werden als Projektvariablen gespeichert und sind somit über verschiedene Composer hinweg verfügbar.
+* **Einschränkung:** Standard-Templatevariablen dürfen nicht denselben Namen wie Label-Variablen tragen.
 
 ---
 
-## 📂 Extras & Vorlagen
+## 📂 Vorlagen & Hilfe
 
-Im Verzeichnis des Plugins befindet sich ein **`Help`-Ordner**. Dieser enthält:
-* Vorbereitete Composer-Templates.
-* Beispiel-Projektdateien für ein schnelles Setup.
+Das Plugin wird mit fertigen Ressourcen ausgeliefert, um den Einstieg zu erleichtern:
+
+* **Templates:** Beispiel-Layouts findest du direkt im Ordner `Layout` innerhalb des Plugin-Verzeichnisses.
+* **Projektdateien:** Im `Help`-Ordner befinden sich vorkonfigurierte QGIS-Projekte.
+
+### Dynamische Layouts
+Wenn du das Papierformat im laufenden Betrieb ändern möchtest, müssen die Elemente (Karte, Legende, Titel) im Composer **dynamisch** definiert sein.
+* Anleitungen dazu findest du in der [QGIS Dokumentation zu dynamischen Layouts](https://docs.qgis.org/3.34/en/docs/training_manual/map_composer/dynamic_layout.html).
 
 ---
-*Entwickelt für effizientes Arbeiten mit QGIS Drucklayouts.*
+*Made for GIS-Pros – Effizientes Drucken leicht gemacht.*

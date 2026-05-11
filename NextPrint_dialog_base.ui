@@ -150,13 +150,16 @@
       </sizepolicy>
      </property>
      <property name="minimum">
-      <number>0</number>
+      <number>-360</number>
      </property>
      <property name="maximum">
-      <number>1000</number>
+      <number>360</number>
      </property>
      <property name="singleStep">
       <number>5</number>
+     </property>
+     <property name="displayIntegerBase">
+      <number>10</number>
      </property>
     </widget>
    </item>

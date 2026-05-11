@@ -29,25 +29,41 @@
  ***************************************************************************/
 """
 
-from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-
-import qgis, platform
-from qgis.core import *
-from qgis.gui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.PyQt import QtXml
 import os
 import math
 import uuid
-import shapely
+import platform
 import webbrowser
+
+# QGIS / PyQt Importe (Shim für Qt5 & Qt6)
+from qgis.PyQt.QtWidgets import  QFileDialog, QMessageBox, QDialog, QDialogButtonBox
+from qgis.PyQt.QtCore import Qt, QSettings, QCoreApplication,QTranslator,QPointF,QRectF
+from qgis.PyQt.QtGui import *
+from qgis.PyQt import QtXml
+from qgis.core import *
+from qgis.gui import *
+
+# Kompatibilitäts-Check für verschobene Klassen (wie QUndoStack)
+try:
+    from qgis.PyQt.QtWidgets import QUndoStack, QUndoCommand
+except ImportError:
+    from qgis.PyQt.QtGui import QUndoStack, QUndoCommand
+
+# Externe Bibliotheken
+import shapely
 from shapely import affinity
 from shapely.geometry import Point, LineString, Polygon
-from .PyPDF2.PyPDF2 import PdfFileMerger
 
+# PDF-Handling (Hinweis: PdfFileMerger ist in neueren PyPDF2-Versionen 'PdfMerger')
+try:
+    from .PyPDF2 import PdfMerger as PdfFileMerger
+except ImportError:
+    from .PyPDF2 import PdfFileMerger
+
+# Lokale Dialoge
 from .NextPrint_dialog import NextPrintDialog
+
+
 
 def msg_inf(msg='',parent=None):
     #Affiche un messagre d'info via Qt box"""
@@ -109,11 +125,11 @@ class InstantPrintTool(QgsMapTool):
 
         # Fin de la traduction de la boite de dialogue
 
-        self.exportButton = self.dialogui.buttonBox.addButton(self.tr("Export"), QDialogButtonBox.ActionRole)
+        self.exportButton = self.dialogui.buttonBox.addButton(self.tr("Export"),  QDialogButtonBox.ButtonRole.ActionRole)
         self.exportButton.setDefault(True)
-        self.helpButton = self.dialogui.buttonBox.addButton(self.tr("Help"), QDialogButtonBox.HelpRole)
+        self.helpButton = self.dialogui.buttonBox.addButton(self.tr("Help"), QDialogButtonBox.ButtonRole.HelpRole)
         self.helpButton.setEnabled(True)
-        self.ComposerButton = self.dialogui.buttonBox.addButton(self.tr("Composer"), QDialogButtonBox.ActionRole)
+        self.ComposerButton = self.dialogui.buttonBox.addButton(self.tr("Composer"),  QDialogButtonBox.ButtonRole.ActionRole)
         self.ComposerButton.setEnabled(True)
 
         self.dialogui.comboBox_fileformat.addItem("PDF", self.tr("PDF Document (*.pdf);;"))
@@ -140,9 +156,9 @@ class InstantPrintTool(QgsMapTool):
         self.helpButton.clicked.connect(self.__help)
         self.ComposerButton.clicked.connect(self.__show_composer)
 
-        self.dialogui.buttonBox.button(QDialogButtonBox.Close).clicked.connect(lambda: self.setEnabled(False))
+        self.dialogui.buttonBox.button(QDialogButtonBox.StandardButton.Close).clicked.connect(lambda: self.setEnabled(False))
         self.deactivated.connect(self.__cleanup)
-        self.setCursor(Qt.OpenHandCursor)
+        self.setCursor(getattr(Qt, 'CursorShape', Qt).OpenHandCursor)
         self.isEmittingPoint = False
 
         
@@ -153,9 +169,13 @@ class InstantPrintTool(QgsMapTool):
         #self.scales = self.__preferences("scale", False)
         # use scales out of the prject settings only integer!
         
-        # self.scales = [str(int(x)) for x in reversed(QgsProjectViewSettings().mapScales())] 
-        self.scales = [str(int(x)) for x in reversed(self.projectInstance.mapScales())] 
+        if Qgis.QGIS_VERSION_INT >= 34000:
+            self.scales = [str(int(x)) for x in reversed(self.projectInstance.viewSettings().mapScales())] 
+        else:
+            self.scales = [str(int(x)) for x in reversed(self.projectInstance.mapScales())]
+
         self.dialogui.comboBox_scale.addItems(self.scales)
+        
 
         self.paperformats = []
         self.paperformats = self.__preferences("format", True)        
@@ -261,7 +281,7 @@ class InstantPrintTool(QgsMapTool):
     def __changeScale(self):
         if not self.mapitem:
             return
-        newscale = int(self.dialogui.comboBox_scale.currentText())
+        newscale = int(float(self.dialogui.comboBox_scale.currentText()))
         if abs(newscale) < 1E-6:
             return
         extent = self.mapitem.extent()
@@ -359,7 +379,7 @@ class InstantPrintTool(QgsMapTool):
             if self.rubberband:
                 self.iface.mapCanvas().scene().removeItem(self.rubberband)
         
-            if self.dialogui.spinBoxRotation.value()>0:
+            if self.dialogui.spinBoxRotation.value()!=0:
                 rotatedPolygon = shapely.affinity.rotate(polygon, self.dialogui.spinBoxRotation.value(), origin='centroid', use_radians=False)
                 x,y = rotatedPolygon.exterior.coords.xy
                 points = [[QgsPointXY(x[0],y[0]), QgsPointXY(x[1], y[1]), QgsPointXY(x[2], y[2]), QgsPointXY(x[3], y[3])]]

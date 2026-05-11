@@ -3,9 +3,11 @@
 
 [general]
 name=Next Print
-qgisMinimumVersion=3.0
+qgisMinimumVersion=3.22
+qgisMaximumVersion=4.99
+
 description=This plugin makes it easy to print using templates and text 
-version=2.8
+version=4.00
 author=g3er geoplaning GmbH
 email=kontakt@geoplaning.de
 
@@ -26,7 +28,10 @@ changelog= 23-03-2020: Added feature to open export-file directly from plugin
 		   07-09-2021: Added feature to print along line
 		   12-01-2023: V2.5 by francois.thevand@gmail.com : Configuration of the complete automatic translation, by .ts file. Provision of French and Danish translation files.
 		   17-01-2023: V2.6 by francois.thevand@gmail.com : Fixed a bug in the export: the entry in the first title line was repeated on the others in the PDF document.
-		   12-12-2024: Added feature to Change Papersize and Oriantation 
+		   12-12-2024: V2.8 Added feature to Change Papersize and Oriantation 
+		   05-05-2025: V2.9 since Qgis 3.40 the list of custom project map scales saved different
+		   22-07-2025: V2.91 Paperrotation left and right (allows negative number -360 to 360) 
+		   07-05-2026: V3.00 QGIS 4 QT6
 
 # Tags are comma separated with spaces allowed
 tags=python, qgis, print, templates, papersize

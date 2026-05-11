@@ -27,23 +27,25 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+import os
+import sys
+import platform
 
-import qgis, platform
+# Der richtige Weg für QGIS 3 & 4: Nutze qgis.PyQt statt PyQt5
+from qgis.PyQt.QtCore import QObject, QSettings, QTranslator, QCoreApplication
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtWidgets import  QToolButton
+
+
 from qgis.core import *
 from qgis.gui import *
-from qgis.PyQt.QtWidgets import *
 
-import os, sys
 
-# Initialize Qt resources from file resources.py
-#import resources
-# Import the code for the dialog
+# Lokale Ressourcen und Dialoge
 from .NextPrint_dialog import NextPrintDialog
 from .InstantPrintTool import InstantPrintTool
 from . import resources
+
 
 class NextPrint(QObject):
     def __init__(self, iface):
